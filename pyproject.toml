@@ -1,0 +1,39 @@
+[project]
+name = "project-orbit"
+version = "0.1.0"
+description = "Local-first project convergence layer — scan all your projects, see what needs attention, and bridge data between them."
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Varesh Patel" }
+]
+requires-python = ">=3.10"
+keywords = ["project-management", "productivity", "monitoring", "cli", "developer-tools"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "rich>=13.0",
+]
+
+[project.scripts]
+orbit = "orbit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Haadesx/project-orbit"
+Repository = "https://github.com/Haadesx/project-orbit"
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

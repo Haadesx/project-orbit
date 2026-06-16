@@ -1,0 +1,176 @@
+# Project Orbit
+
+> **Never lose track of your projects again.**
+
+Project Orbit is a local-first system that scans all your projects, tracks their state, surfaces what needs attention, and bridges data between them. It's your autonomous project convergence layer — built because its author had 12+ side projects and couldn't keep track of them all.
+
+```bash
+pip install project-orbit
+cd ~/your-projects
+orbit init
+orbit scan        # Inventory everything
+orbit dashboard   # Open the command center
+orbit run         # Autonomous allocator cycle
+```
+
+---
+
+## Why?
+
+If you have more than 3 projects, you've felt this:
+
+- Projects go cold for weeks because you forgot about them
+- Data should flow between systems but doesn't
+- When something breaks, you discover it days later
+- Every session starts with "what was I working on?"
+
+Project Orbit watches everything, surfaces what needs attention, and bridges data between projects. It doesn't decide what to build — it tells you what's drifting and lets you (or the allocator) act.
+
+---
+
+## Installation
+
+```bash
+pip install project-orbit
+```
+
+---
+
+## Quick Start
+
+### 1. Initialize in your projects directory
+
+```bash
+cd ~/code
+orbit init
+```
+
+This creates `orbit.json` with default settings.
+
+### 2. Scan everything
+
+```bash
+orbit scan
+```
+
+Output:
+```
+Scanning 12 projects...
+  ✓ trading-system (Python, 142 files)
+  ✓ web-app (Node.js, 89 files)
+  ✓ blog (Python, 23 files)
+  ✓ api-server (Go, 45 files)
+  ✓ docs (Markdown, 67 files)
+```
+
+### 3. See what needs attention
+
+```bash
+orbit priority
+```
+
+Output:
+```
+Priority Queue:
+  1. trading-system (32/100) — stale for 3d, 4 uncommitted files
+  2. blog (20/100) — stale for 14d
+  3. api-server (15/100) — 2 failing tests
+
+Next action: trading-system — git status shows uncommitted work
+```
+
+### 4. Open the command center
+
+```bash
+orbit dashboard
+```
+
+Generates `orbit_dashboard.html` — a single HTML file with all project state, prioritized by need.
+
+### 5. Run the autonomous allocator
+
+```bash
+orbit run
+```
+
+Runs scan → priority → bridges → advances the top-priority project. Add to cron for fully autonomous operation:
+
+```bash
+# Every 30 minutes during work hours
+*/30 9-18 * * 1-5 cd ~/code && orbit run
+```
+
+---
+
+## How It Works
+
+Project Orbit has four layers:
+
+### Scanner
+Walks your projects directory, identifies project roots (git repos, Python packages, Node.js packages), and extracts:
+- File counts and types
+- Git status (stale, clean, dirty)
+- Last activity timestamp
+- Test results
+- Dependencies
+
+### Priority Engine
+Scores each project 0–100 on need for attention. Factors:
+- Days since last commit (older = higher priority, caps at 14 days)
+- Uncommitted changes
+- Failing tests
+- Dependency drift (outdated packages)
+
+### Bridges
+Cross-project data flows. Built-in bridges:
+- Git history scanning
+- Dependency drift detection
+- Staleness alerts
+
+### Allocator
+The decision engine. Runs scanner → priority → bridges, then picks the #1 priority project and advances it. Logs all decisions.
+
+---
+
+## Configuration (`orbit.json`)
+
+```json
+{
+  "projects_dir": ".",
+  "ignore_patterns": ["node_modules", "__pycache__", ".git", "venv"],
+  "staleness_days": 7,
+  "hooks": {
+    "before_scan": "./scripts/pre-scan.sh",
+    "after_priority": "./scripts/notify.sh"
+  },
+  "bridges": {
+    "git_health": true,
+    "dependency_check": true
+  }
+}
+```
+
+---
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `orbit init` | Create `orbit.json` in the current directory |
+| `orbit scan` | Scan all projects and write state |
+| `orbit priority` | Calculate and display priority queue |
+| `orbit dashboard` | Generate HTML command center |
+| `orbit run` | Full allocator cycle (scan → priority → act) |
+| `orbit status` | Quick summary of all projects |
+
+---
+
+## What It Is Not
+
+Project Orbit is not a build system, CI/CD pipeline, or project management tool. It doesn't create tasks, assign work, or manage deadlines. It simply **tells you what's happening** across all your projects and **surfaces what needs attention** — so you can focus on building instead of context-switching.
+
+---
+
+## License
+
+MIT
